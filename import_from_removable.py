@@ -1,24 +1,23 @@
+# Simple script to:
+# 1. Find mounted drives on a windows computer
+# 2. Guess the camera type, if there are photos on there.
+# 3. Copy to a NAS drive organised in to folders of cameratype/date.
+
 from glob import glob
 import psutil
-import json
 import os
 import exifread
 from datetime import datetime
 import logging
-import shutil
-
 import win32file
-
 
 out_path = r'S:\Photos'
 
-
-from subprocess import call
-
 def copyfile(src, dst):
-	#call(["echo", "f", "|", "xcopy", src, dst, "/Y"]) Fastish, 300mbit.
-    #shutil.copyfile(src, dst) - sloooowwww, like 40mbit.
-    win32file.CopyFile(src,dst,0) # Fastest BY FAR. 400mbps on home network.
+	# Benchmarked on wifi network, native windows copy is fastest.
+  #call(["echo", "f", "|", "xcopy", src, dst, "/Y"]) Fastish, 300mbit.
+  #shutil.copyfile(src, dst) - sloooowwww, like 40mbit.
+  win32file.CopyFile(src,dst,0) # Fastest BY FAR. 400mbps on home network.
 	
 # Get mount points for all removalable disks:
 def get_mountpoints():
@@ -64,7 +63,8 @@ def camera_type(mountpoint):
       return model
   except:
     pass
-    
+  
+  # Default camera, my usual.
   logging.debug('Gopro and Exif checks have failed, assuming Canon EOS M6 Mk2')
   return ('Canon EOS M6 II')
 
