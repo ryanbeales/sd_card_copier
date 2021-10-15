@@ -71,6 +71,7 @@ def camera_type(mountpoint):
   
 def get_file_dates(file):
   logging.debug('Checking date on %s', file)
+  # Gopro isn't saving file dates correctly, we need to extract the metadata and check the actual file data from gps data or something (GPMF?)
   photodate = datetime.fromtimestamp(os.stat(file).st_ctime)
   return photodate.year, photodate.month, photodate.day
 
